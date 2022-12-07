@@ -6,7 +6,7 @@ class Server(socket.socket):
     
     __slots__ = ['_ip', '_port']
     
-    def __init__(self, ip=socket.gethostbyname(socket.gethostname()), port=5050):
+    def __init__(self, ip=socket.gethostbyname(socket.gethostname()), port=1000):
         super().__init__(socket.AF_INET, socket.SOCK_STREAM)
         self.bind((ip, port))
         self._ip = ip

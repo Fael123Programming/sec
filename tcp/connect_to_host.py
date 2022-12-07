@@ -13,3 +13,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
     print(f'----- Request sent to server...')
     response = client.recv(4096)
     print(f'----- Response received from the server:\n', response)
+    

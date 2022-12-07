@@ -83,7 +83,7 @@ class Pynet:
                 buffer += '\n'
                 client.send(buffer.encode(self._format))
         except:
-            print(f'SOMETHING WENT WRONG!')
+            print(f'\nSOMETHING WENT WRONG!')
             client.close()
 
     def _server_loop(self):
@@ -92,12 +92,19 @@ class Pynet:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self._target, self._port))
         server.listen()
+        print(f'SERVER RUNNING AT ({self._target}:{self._port}).')
         while True:
-            client_socket, address = server.accept()
-            client_thread = threading.Thread(target=self._client_handler, args=(client_socket, address,))
-            client_thread.start()
-            
+            try:
+                client_socket, address = server.accept()
+                client_thread = threading.Thread(target=self._client_handler, args=(client_socket, address,))
+                client_thread.start()
+            except:
+                print(f'\nSERVER AT ({self._target}:{self._port}) CLOSED.')
+                server.close()
+                break
+                
     def _client_handler(self, client_socket, address):
+        print(f'({address[0]}:{address[1]}) CONNECTED.')
         if len(self._upload_destination) > 0:
             file_buffer = b''
             while True:
@@ -122,6 +129,9 @@ class Pynet:
                 cmd_buffer = ''
                 while '\n' not in cmd_buffer:
                     cmd_buffer += client_socket.recv(1024).decode(self._format)
+                if 'exit' in cmd_buffer or 'EXIT' in cmd_buffer:
+                    client_socket.close()
+                    break
                 response = self._run_command(cmd_buffer)
                 client_socket.send(response)
             

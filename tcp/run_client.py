@@ -12,7 +12,7 @@ def is_invalid_ip(ip):
         except:
             return True
         else:
-            if ip_octet_int < 2 or ip_octet_int > 254:
+            if ip_octet_int < 1 or ip_octet_int > 254:
                 return True
     return False
         
